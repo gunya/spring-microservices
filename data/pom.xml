@@ -22,5 +22,6 @@
 		<module>data-jpa</module>
 		<module>data-redis</module>
 		<module>data-mongodb</module>
+		<module>data-rest</module>
 	</modules>
 </project>
