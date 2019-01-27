@@ -4,22 +4,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.hepexta.microcervices</groupId>
-		<artifactId>spring-microcervices</artifactId>
+		<artifactId>data</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-
-	<artifactId>data</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>data</name>
-	<description>Data in Spring Boot</description>
-	<packaging>pom</packaging>
+	<artifactId>data-mongodb</artifactId>
 
 	<properties>
-		<main.basedir>..</main.basedir>
+		<main.basedir>../..</main.basedir>
 	</properties>
-
-	<modules>
-		<module>data-redis</module>
-		<module>data-mongodb</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+	</dependencies>
 </project>
