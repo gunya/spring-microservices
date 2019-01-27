@@ -21,6 +21,7 @@
 
    <modules>
        <module>cloud-heroku</module>
+       <module>configuration</module>
    </modules>
 
     <build>
