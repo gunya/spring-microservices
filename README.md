@@ -12,6 +12,8 @@
 
 # Data
 
+[JPA Example](https://github.com/gunya/spring-microservices/tree/master/data/data-jpa)
+
 [Redis Example](https://github.com/gunya/spring-microservices/tree/master/data/data-redis)
 
 [MongoDB Example](https://github.com/gunya/spring-microservices/tree/master/data/data-mongodb)
