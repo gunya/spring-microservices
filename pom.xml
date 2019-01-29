@@ -24,6 +24,7 @@
        <module>configuration</module>
        <module>configuration-in-repository</module>
        <module>data</module>
+       <module>error-handling</module>
    </modules>
 
     <build>

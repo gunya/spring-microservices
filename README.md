@@ -14,3 +14,6 @@
 * [Redis Example](https://github.com/gunya/spring-microservices/tree/master/data/data-redis)
 * [MongoDB Example](https://github.com/gunya/spring-microservices/tree/master/data/data-mongodb)
 * [JPA Rest Example](https://github.com/gunya/spring-microservices/tree/master/data/data-rest)
+
+# Error Handling
+* [Error Handling with vnd](https://github.com/gunya/spring-microservices/tree/master/error-handling)
