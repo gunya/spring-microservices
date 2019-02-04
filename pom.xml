@@ -25,6 +25,7 @@
        <module>configuration-in-repository</module>
        <module>data</module>
        <module>error-handling</module>
+       <module>spring-reactjs</module>
    </modules>
 
     <build>
