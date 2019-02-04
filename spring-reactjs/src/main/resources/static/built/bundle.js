@@ -29069,13 +29069,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
@@ -29099,8 +29099,12 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
-      employees: []
+      employees: [],
+      attributes: [],
+      pageSize: 2,
+      links: {}
     };
+    _this.onCreate = _this.onCreate.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -29140,11 +29144,41 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "onCreate",
+    value: function onCreate(newEmployee) {
+      var _this3 = this;
+
+      follow(client, root, ['employees']).then(function (employeeCollection) {
+        return client({
+          method: 'POST',
+          path: employeeCollection.entity._links.self.href,
+          entity: newEmployee,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }).then(function (response) {
+        return follow(client, root, [{
+          rel: 'employees',
+          params: {
+            'size': _this3.state.pageSize
+          }
+        }]);
+      }).done(function (response) {
+        _this3.componentDidMount();
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      return React.createElement(EmployeeList, {
-        employees: this.state.employees
-      });
+      return React.createElement("div", null, React.createElement(CreateDialog, {
+        attributes: this.state.attributes,
+        onCreate: this.onCreate
+      }), React.createElement(EmployeeList, {
+        employees: this.state.employees,
+        links: this.state.links,
+        pageSize: this.state.pageSize
+      }));
     }
   }]);
 
@@ -29171,7 +29205,7 @@ function (_React$Component2) {
           employee: employee
         });
       });
-      return React.createElement("table", null, React.createElement("tbody", null, React.createElement("tr", null, React.createElement("th", null, "First Name"), React.createElement("th", null, "Last Name"), React.createElement("th", null, "Description")), employees));
+      return React.createElement("table", null, React.createElement("tbody", null, React.createElement("tr", null, React.createElement("th", null, "First Name"), React.createElement("th", null, "Last Name"), React.createElement("th", null, "Description"), React.createElement("th", null, "Action")), employees));
     }
   }]);
 
@@ -29190,25 +29224,6 @@ function (_React$Component3) {
   }
 
   _createClass(Employee, [{
-    key: "handleDelete",
-    value: function handleDelete() {
-      var self = this;
-      $.ajax({
-        url: self.props.employee._links.self.href,
-        type: 'DELETE',
-        success: function success(result) {
-          self.setState({
-            display: false
-          });
-        },
-        error: function error(xhr, ajaxOptions, thrownError) {
-          toastr.error(xhr.responseJSON.message);
-        }
-      }); // client({method: 'DELETE', path: '/api/employees'}).done(response => {
-      //     this.setState({employees: response.entity._embedded.employees});
-      // })
-    }
-  }, {
     key: "render",
     value: function render() {
       return React.createElement("tr", null, React.createElement("td", null, this.props.employee.firstName), React.createElement("td", null, this.props.employee.lastName), React.createElement("td", null, this.props.employee.description), React.createElement("td", null, React.createElement("button", {
@@ -29219,6 +29234,70 @@ function (_React$Component3) {
   }]);
 
   return Employee;
+}(React.Component);
+
+var CreateDialog =
+/*#__PURE__*/
+function (_React$Component4) {
+  _inherits(CreateDialog, _React$Component4);
+
+  function CreateDialog(props) {
+    var _this4;
+
+    _classCallCheck(this, CreateDialog);
+
+    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(CreateDialog).call(this, props));
+    _this4.handleSubmit = _this4.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this4)));
+    return _this4;
+  }
+
+  _createClass(CreateDialog, [{
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      var _this5 = this;
+
+      e.preventDefault();
+      var newEmployee = {};
+      this.props.attributes.forEach(function (attribute) {
+        newEmployee[attribute] = ReactDOM.findDOMNode(_this5.refs[attribute]).value.trim();
+      });
+      this.props.onCreate(newEmployee); // clear out the dialog's inputs
+
+      this.props.attributes.forEach(function (attribute) {
+        ReactDOM.findDOMNode(_this5.refs[attribute]).value = '';
+      }); // Navigate away from the dialog to hide it.
+
+      window.location = "#";
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var inputs = this.props.attributes.map(function (attribute) {
+        return React.createElement("p", {
+          key: attribute
+        }, React.createElement("input", {
+          type: "text",
+          placeholder: attribute,
+          ref: attribute,
+          className: "field"
+        }));
+      });
+      return React.createElement("div", null, React.createElement("a", {
+        href: "#createEmployee"
+      }, "Create"), React.createElement("div", {
+        id: "createEmployee",
+        className: "modalDialog"
+      }, React.createElement("div", null, React.createElement("a", {
+        href: "#",
+        title: "Close",
+        className: "close"
+      }, "X"), React.createElement("h2", null, "Create new employee"), React.createElement("form", null, inputs, React.createElement("button", {
+        onClick: this.handleSubmit
+      }, "Create")))));
+    }
+  }]);
+
+  return CreateDialog;
 }(React.Component);
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('react'));
