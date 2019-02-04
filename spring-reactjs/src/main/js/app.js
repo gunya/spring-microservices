@@ -12,6 +12,7 @@ class App extends React.Component {
         this.onCreate = this.onCreate.bind(this);
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
+        this.onDelete = this.onDelete.bind(this);
     }
 
     componentDidMount() {
@@ -70,6 +71,12 @@ class App extends React.Component {
         });
     }
 
+    onDelete(employee) {
+        client({method: 'DELETE', path: employee._links.self.href}).done(response => {
+            this.loadFromServer(this.state.pageSize);
+        });
+    }
+
     updatePageSize(pageSize) {
         if (pageSize !== this.state.pageSize) {
             this.loadFromServer(pageSize);
@@ -84,7 +91,8 @@ class App extends React.Component {
                               links={this.state.links}
                               pageSize={this.state.pageSize}
                               onNavigate={this.onNavigate}
-                              updatePageSize={this.updatePageSize}/>
+                              updatePageSize={this.updatePageSize}
+                              onDelete={this.onDelete}/>
             </div>
         )
     }
@@ -133,7 +141,7 @@ class EmployeeList extends React.Component{
 
     render() {
         const employees = this.props.employees.map(employee =>
-            <Employee key={employee._links.self.href} employee={employee}/>
+            <Employee key={employee._links.self.href} employee={employee} onDelete={this.props.onDelete}/>
         );
 
         const navLinks = [];
@@ -173,6 +181,15 @@ class EmployeeList extends React.Component{
 }
 
 class Employee extends React.Component{
+    constructor(props) {
+        super(props);
+        this.handleDelete = this.handleDelete.bind(this);
+    }
+
+    handleDelete() {
+        this.props.onDelete(this.props.employee);
+    }
+
     render() {
         return (
             <tr>
