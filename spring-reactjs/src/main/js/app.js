@@ -10,6 +10,8 @@ class App extends React.Component {
         super(props);
         this.state = {employees: [], attributes: [], pageSize: 2, links: {}};
         this.onCreate = this.onCreate.bind(this);
+        this.updatePageSize = this.updatePageSize.bind(this);
+        this.onNavigate = this.onNavigate.bind(this);
     }
 
     componentDidMount() {
@@ -49,8 +51,29 @@ class App extends React.Component {
             return follow(client, root, [
                 {rel: 'employees', params: {'size': this.state.pageSize}}]);
         }).done(response => {
-            this.componentDidMount();
+            if (typeof response.entity._links.last !== "undefined") {
+                this.onNavigate(response.entity._links.last.href);
+            } else {
+                this.onNavigate(response.entity._links.self.href);
+            }
         });
+    }
+
+    onNavigate(navUri) {
+        client({method: 'GET', path: navUri}).done(employeeCollection => {
+            this.setState({
+                employees: employeeCollection.entity._embedded.employees,
+                attributes: this.state.attributes,
+                pageSize: this.state.pageSize,
+                links: employeeCollection.entity._links
+            });
+        });
+    }
+
+    updatePageSize(pageSize) {
+        if (pageSize !== this.state.pageSize) {
+            this.loadFromServer(pageSize);
+        }
     }
 
     render() {
@@ -59,29 +82,92 @@ class App extends React.Component {
                 <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
                 <EmployeeList employees={this.state.employees}
                               links={this.state.links}
-                              pageSize={this.state.pageSize}/>
+                              pageSize={this.state.pageSize}
+                              onNavigate={this.onNavigate}
+                              updatePageSize={this.updatePageSize}/>
             </div>
         )
     }
 }
 
 class EmployeeList extends React.Component{
+    constructor(props) {
+        super(props);
+        this.handleNavFirst = this.handleNavFirst.bind(this);
+        this.handleNavPrev = this.handleNavPrev.bind(this);
+        this.handleNavNext = this.handleNavNext.bind(this);
+        this.handleNavLast = this.handleNavLast.bind(this);
+        this.handleInput = this.handleInput.bind(this);
+    }
+
+    handleInput(e) {
+        e.preventDefault();
+        const pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
+        if (/^[0-9]+$/.test(pageSize)) {
+            this.props.updatePageSize(pageSize);
+        } else {
+            ReactDOM.findDOMNode(this.refs.pageSize).value =
+                pageSize.substring(0, pageSize.length - 1);
+        }
+    }
+
+    handleNavFirst(e){
+        e.preventDefault();
+        this.props.onNavigate(this.props.links.first.href);
+    }
+
+    handleNavPrev(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.links.prev.href);
+    }
+
+    handleNavNext(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.links.next.href);
+    }
+
+    handleNavLast(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.links.last.href);
+    }
+
     render() {
         const employees = this.props.employees.map(employee =>
             <Employee key={employee._links.self.href} employee={employee}/>
         );
+
+        const navLinks = [];
+        if ("first" in this.props.links) {
+            navLinks.push(<button key="first" onClick={this.handleNavFirst}>&lt;&lt;</button>);
+        }
+        if ("prev" in this.props.links) {
+            navLinks.push(<button key="prev" onClick={this.handleNavPrev}>&lt;</button>);
+        }
+        if ("next" in this.props.links) {
+            navLinks.push(<button key="next" onClick={this.handleNavNext}>&gt;</button>);
+        }
+        if ("last" in this.props.links) {
+            navLinks.push(<button key="last" onClick={this.handleNavLast}>&gt;&gt;</button>);
+        }
+
         return (
-            <table>
-                <tbody>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-                {employees}
-                </tbody>
-            </table>
+            <div>
+                <input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                    {employees}
+                    </tbody>
+                </table>
+                <div>
+                    {navLinks}
+                </div>
+            </div>
         )
     }
 }
