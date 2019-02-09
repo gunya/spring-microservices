@@ -20,3 +20,7 @@
 
 # FrontEnd Integration
 * [React JS](https://github.com/gunya/spring-microservices/tree/master/spring-reactjs)
+
+# Integration and Batch Processing
+* [Spring Rabit MQ Producer](https://github.com/gunya/spring-microservices/tree/master/spring-integration/spring-producer)
+* [Spring Rabit MQ Consumer](https://github.com/gunya/spring-microservices/tree/master/spring-integration/spring-consumer)
