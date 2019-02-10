@@ -15,8 +15,11 @@
 * [MongoDB Example](https://github.com/gunya/spring-microservices/tree/master/data/data-mongodb)
 * [JPA Rest Example](https://github.com/gunya/spring-microservices/tree/master/data/data-rest)
 
-# Error Handling
-* [Error Handling with vnd](https://github.com/gunya/spring-microservices/tree/master/error-handling)
+# Monitoring
+* [Error Handling with vnd](https://github.com/gunya/spring-microservices/tree/master/spring-monitoring/error-handling)
+* [Logging](https://github.com/gunya/spring-microservices/tree/master/spring-monitoring/spring-loggigng)
+* [Actuator Features](https://github.com/gunya/spring-microservices/tree/master/spring-monitoring/spring-actuator)
+* [Metrics](https://github.com/gunya/spring-microservices/tree/master/spring-monitoring/spring-metrics)
 
 # FrontEnd Integration
 * [React JS](https://github.com/gunya/spring-microservices/tree/master/spring-reactjs)

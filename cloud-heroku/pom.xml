@@ -12,10 +12,6 @@
 
     <artifactId>cloud-heroku</artifactId>
 
-    <properties>
-        <main.basedir>../..</main.basedir>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
