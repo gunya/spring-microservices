@@ -22,7 +22,8 @@
 * [Metrics](https://github.com/gunya/spring-microservices/tree/master/spring-monitoring/spring-metrics)
 
 # FrontEnd Integration
-* [React JS](https://github.com/gunya/spring-microservices/tree/master/spring-reactjs)
+* [React JS](https://github.com/gunya/spring-microservices/tree/master/frontend/spring-reactjs)
+* [Thymeleaf](https://github.com/gunya/spring-microservices/tree/master/frontend/spring-thymeleaf)
 
 # Integration and Batch Processing
 * [Spring Rabit MQ Producer](https://github.com/gunya/spring-microservices/tree/master/spring-integration/spring-producer)
