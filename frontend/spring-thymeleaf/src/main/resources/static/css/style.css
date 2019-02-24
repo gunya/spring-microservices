@@ -1,0 +1,25 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+	width: 100%;
+}
+
+h1 {
+	padding: 20px;
+}
+
+p {
+	padding: 1px;
+	text-indent: 25px;
+}
+
+div.banner {
+	background: #E9EDE8;
+	padding: 10px 20px;
+	margin: 0 auto;
+}
+
+.footer {
+	color: #AAAAAA;
+}

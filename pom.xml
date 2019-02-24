@@ -19,9 +19,9 @@
        <module>configuration</module>
        <module>configuration-in-repository</module>
        <module>data</module>
-       <module>spring-reactjs</module>
        <module>spring-integration</module>
        <module>spring-monitoring</module>
+       <module>frontend</module>
    </modules>
 
     <build>
